@@ -18,7 +18,9 @@ export default function Game() {    // top-level component
 
     const moves = history.map((squares, move) => {
         let description;
-        if (move > 0) {
+        if (move === currentMove) {
+            description = "You are at move #" + move;
+        } else if (move > 0) {
             description = "Go to move #" + move;
         } else {
             description = "Go to game start";
@@ -64,24 +66,19 @@ function Board({ xIsNext, squares, onPlay }) {
         status = "Next player: " + (xIsNext ? "X" : "O")
     }
 
+    const board = Array(3).fill(null);
+    for (let i = 0; i < 3; i++) {
+        const boardRow = Array(3).fill(null);
+        for (let j = 0; j < 3; j++) {
+            boardRow[j] = <Square value={squares[j + 3*i]} onSquareClick={() => handleClick(j + 3*i)}/>
+        }
+        board[i] = <div className="board-row">{boardRow}</div>
+    }
+
     return (
         <>
             <div className="status">{status}</div>
-            <div className="board-row">
-                <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-                <Square value={squares[1]} onSquareClick={() => handleClick(1)}/>
-                <Square value={squares[2]} onSquareClick={() => handleClick(2)}/>
-            </div>
-            <div className="board-row">
-                <Square value={squares[3]} onSquareClick={() => handleClick(3)}/>
-                <Square value={squares[4]} onSquareClick={() => handleClick(4)}/>
-                <Square value={squares[5]} onSquareClick={() => handleClick(5)}/>
-            </div>
-            <div className="board-row">
-                <Square value={squares[6]} onSquareClick={() => handleClick(6)}/>
-                <Square value={squares[7]} onSquareClick={() => handleClick(7)}/>
-                <Square value={squares[8]} onSquareClick={() => handleClick(8)}/>
-            </div>
+            {board}
         </>
     );
 }
